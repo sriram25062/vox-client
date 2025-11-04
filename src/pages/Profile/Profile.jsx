@@ -3,6 +3,7 @@ import Card from "../../Components/Card.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from "../../Components/Navbar.jsx";
 import { useEffect } from "react";
+import { API_URL } from '../../api';
 
 function Profile() {
 
@@ -28,9 +29,12 @@ function Profile() {
     ];
 
     useEffect(() => {
-        fetch("http://localhost:3001/user/find").then((val) => {
-            console.log(val.json());
-        })
+        fetch(`${API_URL}/user/find`)
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+          })
+          .catch((err) => console.error(err));
     },[]);
 
     

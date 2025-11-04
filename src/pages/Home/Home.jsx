@@ -3,6 +3,7 @@ import Card from "../../Components/Card.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SideNavbar from "../../Components/SideNavbar.jsx"
 import { useState, useEffect, useRef } from "react";
+import { API_URL } from '../../api';
 import "./Home.css";
 
 function Home() {
@@ -23,7 +24,7 @@ function Home() {
 
       const fetchUsers = async () => {
         try {
-          let baseUrl = "http://localhost:3001/user/find";
+          let baseUrl = `${API_URL}/user/find`;
 
           if (searched.trim() !== "") {
             baseUrl = `${baseUrl}?username=${encodeURIComponent(searched.trim())}`;

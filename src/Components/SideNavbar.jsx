@@ -1,5 +1,6 @@
 import Button from "./Button"
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { BrandLogo } from '../assets';
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
@@ -52,7 +53,7 @@ function SideNavbar() {
         <div className="navbar d-flex flex-column" style={{height:'100vh', width:'100%', background: "linear-gradient(135deg, #0f0f0f, #1a1a1a, #0d0d0d)"}}>
             <div className="container flex-column">
                 <div>
-                    <img src="/Brand.png" alt="Logo" style={{width:"6rem", height:"6rem"}}/>
+                        <img src={BrandLogo} alt="Logo" style={{width:"6rem", height:"6rem"}}/>
                 </div>
                 <div className="d-flex flex-column justify-content-center align-items-start" style={{gap:"8px"}}>
                     {navData.map((value) => (
