@@ -1,0 +1,5 @@
+input.form-control.custom-input::placeholder {
+  color: #212121 !important;
+  opacity: 1;
+}
+
