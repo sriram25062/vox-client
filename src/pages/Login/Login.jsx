@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Login.css"
+import { BrandLogo } from '../../assets';
 import {Link, useNavigate} from "react-router-dom";
-import axios from 'axios';
+import api from '../../api';
 import {useAuth} from "../../context/AuthContext";
 
 function Login() {
@@ -13,7 +14,7 @@ function Login() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
-  const { user, login } = useAuth();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +29,7 @@ function Login() {
     try {
       setLoading(true);
 
-      const res = await axios.post("http://localhost:3001/user/login", {
+            const res = await api.post('/user/login', {
         identifier,
         password,
       });
@@ -50,7 +51,7 @@ function Login() {
         <div className='container-fluid vh-100 d-flex justify-content-center align-items-center '  style={{background: "linear-gradient(135deg, #0f0f0f, #1a1a1a, #0d0d0d)"}}>
             <div className='d-flex flex-column' style={{gap:"2rem"}}>
                 <div className='card shadow d-flex justify-content-center align-items-center' style={{background:"linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02))", padding:"1rem", borderRadius: "1rem", backdropFilter: "blur(10px)",  WebkitBackdropFilter: "blur(10px)",  border: "1px solid rgba(255, 255, 255, 0.1)", boxShadow: "0 0 0 2px rgba(255,255,255,0.1), 0 0 0 6px rgba(255,255,255,0.05)", outline: "2px solid rgba(255, 255, 255, 0.05)", outlineOffset: "10px"}}>
-                    <img src="/Brand.png" alt="Logo" style={{width:"10rem", height:"10rem"}}/>
+                    <img src={BrandLogo} alt="Logo" style={{width:"10rem", height:"10rem"}}/>
                     <form onSubmit={handleSubmit} className='d-flex flex-column justify-content-center align-items-center w-100'>
                         <div className='d-flex flex-column' style={{width:"90%", gap:"15px"}}>
                             <input 
@@ -91,7 +92,7 @@ function Login() {
                             {loading ? "Logging in..." : "Log in"}
                         </button>
                     </form><br/>
-                    <a href="#" className='underline'>Forgot Password?</a>
+                    <Link to="/forgot-password" className='underline'>Forgot Password?</Link>
                 </div>
                 <div className='card shadow' style={{background:"linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02))", padding:"1rem 2rem", borderRadius: "1rem", backdropFilter: "blur(10px)",  WebkitBackdropFilter: "blur(10px)",  border: "1px solid rgba(255, 255, 255, 0.1)", boxShadow: "0 0 0 2px rgba(255,255,255,0.1), 0 0 0 6px rgba(255,255,255,0.05)", outline: "2px solid rgba(255, 255, 255, 0.05)", outlineOffset: "10px"}}>
                     <span style={{font:"16px Roboto,sans-serif", color:"white"}}>

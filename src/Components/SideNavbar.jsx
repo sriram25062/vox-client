@@ -1,5 +1,6 @@
 import Button from "./Button"
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { BrandLogo } from '../assets';
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
@@ -12,12 +13,12 @@ function SideNavbar() {
     const popupRef = useRef(null);
 
     const navData = [
-        {label:"Home"},
-        {label: "Explore"},
-        {label: "Notifications"},
-        {label: "Messages"},
-        {label: "Communities"},
-        {label: "Profile"}
+        {label:"Home", path:"/home", icon: "cottage"},
+        {label: "Explore", path:"/explore", icon: "explore"},
+        {label: "Notifications", path:"/notifications", icon: "favorite"},
+        {label: "Messages", path:"/messages", icon: "send"},
+        {label: "Communities", path:"/communities", icon: "communities"},
+        {label: "Profile", path:"/profile", isProfile: true},
     ]
 
     const handleLogout = () => {
@@ -49,32 +50,60 @@ function SideNavbar() {
     }, [showPopup]);
 
     return(
-        <div className="navbar d-flex flex-column" style={{height:'100vh', width:'100%', background: "linear-gradient(135deg, #0f0f0f, #1a1a1a, #0d0d0d)"}}>
+        <div className="navbar d-flex flex-column" style={{height:'100vh', width:'100%', background: "linear-gradient(135deg, #0f0f0f, #1a1a1a, #0d0d0d)", backgroundAttachment: "fixed"}}>
             <div className="container flex-column">
                 <div>
-                    <img src="/Brand.png" alt="Logo" style={{width:"6rem", height:"6rem"}}/>
+                        <img src={BrandLogo} alt="Logo" style={{width:"6rem", height:"6rem"}}/>
                 </div>
                 <div className="d-flex flex-column justify-content-center align-items-start" style={{gap:"8px"}}>
                     {navData.map((value) => (
-                        <Button label={value.label} style={{fontSize:"20px", fontWeight:"600", color:"white", background: "linear-gradient(135deg, #0f0f0f, #1a1a1a, #0d0d0d)"}} bootstrap= "btn btn-dark"/>
+                        <Link to={value.path} key={value.label} style={{textDecoration:"none"}}> 
+                        <Button
+                        label={
+                          <div className="d-flex align-items-center" style={{ gap: "8px" }}>
+                            {value.isProfile ? (
+                                <img
+                                    src={user ?. profilePicUrl || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+                                    alt="Profile"
+                                    style={{
+                                    width: "28px",
+                                    height: "28px",
+                                    borderRadius: "50%",
+                                    objectFit: "cover",
+                                    border: "2px solid white"
+                                    }}
+                                />
+                            ) : (
+                               <span class="material-symbols-outlined">{value.icon}</span>
+                             )}
+                            {value.label}    
+                          </div>
+                        }
+                        style={{fontSize:"20px", fontWeight:"600", color:"white", backgroundColor: "#212121"}} 
+                        bootstrap= "btn btn-dark"
+                        />
+                        </Link>
                     ))}
                 </div><br/>
                 <Link to="/signup">
-                    <Button label={"Post"} style={{width:"15rem", fontWeight:"600", backgroundColor: "white", color: "black"}} bootstrap= "btn btn-dark"/>
+                    <Button label={"Post"} style={{fontSize:"20px", width:"15rem", fontWeight:"600", backgroundColor: "white", color: "black"}} bootstrap= "btn btn-dark"/>
                 </Link>
             </div>
             <div className="mt-auto mb-4 text-center position-relative" ref={popupRef}>
-                <Button
-                label={user ? `${user.fullname} (@${user.username})` : "Account"}
+                <button
+                className="btn btn-dark d-flex align-items-center justify-content-between"
                 style={{
                     width: "15rem",
                     fontWeight: "600",
-                    background: "linear-gradient(135deg, #0f0f0f, #1a1a1a, #0d0d0d)",
-                    color: "white",
+                    fontSize:"20px",
+                    backgroundColor: "white",
+                    color: "black"
                 }}
-                bootstrap="btn btn-dark"
                 onClick={togglePopup}
-                />
+                >
+                    {user ? `${user.fullname} (@${user.username})` : "Account"}
+                    <span className="material-symbols-outlined">more_vert</span>
+                </button>
 
                 {showPopup && (
                 <div

@@ -3,6 +3,7 @@ import Card from "../../Components/Card.jsx";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SideNavbar from "../../Components/SideNavbar.jsx"
 import { useState, useEffect, useRef } from "react";
+import { API_URL } from '../../api';
 import "./Home.css";
 
 function Home() {
@@ -23,7 +24,7 @@ function Home() {
 
       const fetchUsers = async () => {
         try {
-          let baseUrl = "http://localhost:3001/user/find";
+          let baseUrl = `${API_URL}/user/find`;
 
           if (searched.trim() !== "") {
             baseUrl = `${baseUrl}?username=${encodeURIComponent(searched.trim())}`;
@@ -110,7 +111,7 @@ function Home() {
                   <div
                     key={index}
                     className="p-2 mb-2 rounded"
-                    style={{ backgroundColor: "#333", color: "white" }}
+                    style={{ backgroundColor: "#212121", color: "white" }}
                   >
                     <p className="mb-1 fw-bold">{user.fullname || "Unnamed User"}</p>
                     <p className="mb-0 small text-secondary">{user.username || "No username"}</p>

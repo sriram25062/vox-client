@@ -4,6 +4,7 @@ import Register from "./pages/Register/Register.jsx"
 import Login from "./pages/Login/Login.jsx"
 import Landing from "./pages/Landing/Landing.jsx"
 import Profile from "./pages/Profile/Profile.jsx"
+import Template from "./pages/Template/Template.jsx"
 import ProtectedLayout from "./routes/ProtectedLayout.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 
@@ -16,6 +17,7 @@ function App() {
           <Route path = "/" element = {<Landing/>} />
           <Route path = "/signup" element = {<Register/>} />
           <Route path = "/login" element = {<Login/>} />
+          <Route path = "/template" element = {<Template/>} />
           <Route element={<ProtectedLayout/>}>
             <Route path = "/profile" element = {<Profile/>} />
             <Route path = "/home" element = {<Home/>} />

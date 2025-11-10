@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Register.css";
+import { BrandLogo } from '../../assets';
 import {Link} from "react-router-dom";
-import axios from 'axios';
+import api from '../../api';
 
 function Register() {
     // form state
@@ -44,7 +45,7 @@ function Register() {
 
         try {
             setLoading(true);
-            const res = await axios.post('http://localhost:3001/user/register', payload);
+            const res = await api.post('/user/register', payload);
             // assume API returns message or user data
             setSuccess(res?.data?.message || 'Registration successful');
             // optionally clear form
@@ -66,7 +67,7 @@ function Register() {
         <div className='container-fluid vh-100 d-flex justify-content-center align-items-center '  style={{background: "linear-gradient(135deg, #0f0f0f, #1a1a1a, #0d0d0d)"}}>
             <div className='d-flex flex-column' style={{gap:"2rem"}}>
                 <div className='card shadow  d-flex justify-content-center align-items-center' style={{background:"linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02))", padding:"1rem", borderRadius: "1rem", backdropFilter: "blur(10px)",  WebkitBackdropFilter: "blur(10px)",  border: "1px solid rgba(255, 255, 255, 0.1)", boxShadow: "0 0 0 2px rgba(255,255,255,0.1), 0 0 0 6px rgba(255,255,255,0.05)", outline: "2px solid rgba(255, 255, 255, 0.05)", outlineOffset: "10px"}}>
-                    <img src="/Brand.png" alt="Logo" style={{width:"6rem", height:"6rem"}}/>
+                    <img src={BrandLogo} alt="Logo" style={{width:"6rem", height:"6rem"}}/>
                     <div className='d-flex flex-column justify-content-center align-items-center'>
                         {/* <span style={{font:"16px Roboto,sans-serif", color:"#9e9e9e"}}>Sign up to see posts and stories</span>
                         <span style={{font:"16px Roboto,sans-serif", color:"#9e9e9e"}}>from your friends.</span> */}
@@ -121,7 +122,7 @@ function Register() {
                                 checked={acceptedTerms}
                                 onChange={(e) => setAcceptedTerms(e.target.checked)}
                             />
-                            <p style={{font:"10px Roboto,sans-serif", color:"#9e9e9e", margin:"0.25rem 0 0 0"}}>By clicking "Next", I agree to the <a href="#">Terms of Service</a> and{" "}<a href="#">Privacy Policy</a>.</p>
+                            <p style={{font:"10px Roboto,sans-serif", color:"#9e9e9e", margin:"0.25rem 0 0 0"}}>By clicking "Next", I agree to the <Link to="/terms">Terms of Service</Link> and{" "}<Link to="/privacy">Privacy Policy</Link>.</p>
                         </div><br/>
 
                         {error && <div className="alert alert-danger" style={{width: '95%'}}>{error}</div>}

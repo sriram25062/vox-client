@@ -8,24 +8,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Function to decode and store user info from token
-  const decodeAndSetUser = (token) => {
-    try {
-      const decoded = jwtDecode(token);
-      setUser(decoded);
-      setIsAuthenticated(true);
-    } catch (error) {
-      console.error("Invalid token:", error);
-      logout(); // clear everything if invalid
-    }
-  };
-
-  // ✅ Login function
-  const login = (token) => {
-    localStorage.setItem("token", token);
-    decodeAndSetUser(token);
-  };
-
   // ✅ Logout function
   const logout = () => {
     localStorage.removeItem("token");
@@ -33,10 +15,32 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  // ✅ Login function
+  const login = (token) => {
+    localStorage.setItem("token", token);
+    try {
+      const decoded = jwtDecode(token);
+      setUser(decoded);
+      setIsAuthenticated(true);
+    } catch (error) {
+      console.error("Invalid token:", error);
+      logout();
+    }
+  };
+
   // ✅ Check token on first load (so login persists after refresh)
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) decodeAndSetUser(token);
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUser(decoded);
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error("Invalid token:", error);
+        logout();
+      }
+    }
     setLoading(false);
   }, []);
 
