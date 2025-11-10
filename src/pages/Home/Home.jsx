@@ -111,7 +111,7 @@ function Home() {
                   <div
                     key={index}
                     className="p-2 mb-2 rounded"
-                    style={{ backgroundColor: "#333", color: "white" }}
+                    style={{ backgroundColor: "#212121", color: "white" }}
                   >
                     <p className="mb-1 fw-bold">{user.fullname || "Unnamed User"}</p>
                     <p className="mb-0 small text-secondary">{user.username || "No username"}</p>
