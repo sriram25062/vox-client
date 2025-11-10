@@ -63,7 +63,7 @@ function SideNavbar() {
                           <div className="d-flex align-items-center" style={{ gap: "8px" }}>
                             {value.isProfile ? (
                                 <img
-                                    src={user ?. profilePicUrl || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+                                    src={user?.profilePicUrl || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
                                     alt="Profile"
                                     style={{
                                     width: "28px",
