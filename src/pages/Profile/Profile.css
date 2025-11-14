@@ -1,0 +1,47 @@
+.luxury-outline-blue {
+  border: 1px solid #00bfff;
+  border-radius: 10px;
+  box-shadow:
+    0 0 8px rgba(0, 191, 255, 0.7),
+    0 0 15px rgba(0, 191, 255, 0.5),
+    inset 0 0 10px rgba(0, 191, 255, 0.6);
+  background: linear-gradient(135deg, #0f0f0f, #1a1a1a, #0d0d0d);
+  color: #e6f9ff;
+  padding: 0px;
+}
+
+.luxury-outline {
+  border: 2px solid #ffd700;
+  border-radius: 10px;
+  box-shadow:
+    0 0 8px rgba(255, 215, 0, 0.7),
+    0 0 15px rgba(255, 215, 0, 0.5),
+    inset 0 0 10px rgba(255, 215, 0, 0.6);
+  background-color: #0a0a0a;
+  color: white;
+  padding: 0px;
+}
+
+.luxury-outline-white {
+  border: 2px solid #ffffff;
+  border-radius: 10px;
+  box-shadow:
+    0 0 8px rgba(255, 255, 255, 0.7),
+    0 0 15px rgba(255, 255, 255, 0.5),
+    inset 0 0 10px rgba(255, 255, 255, 0.6);
+  background: linear-gradient(135deg, #1a1a1a, #2a2a2a, #1d1d1d);
+  color: #f0f0f0;
+  padding: 20px;
+}
+
+.luxury-outline-black {
+  border: 2px solid #000000;
+  border-radius: 10px;
+  box-shadow:
+    0 0 8px rgba(0, 0, 0, 0.7),
+    0 0 15px rgba(0, 0, 0, 0.5),
+    inset 0 0 10px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(135deg, #f0f0f0, #dcdcdc, #e8e8e8);
+  color: #1a1a1a;
+  padding: 20px;
+}
