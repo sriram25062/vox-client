@@ -1,22 +1,17 @@
-import Button from "../../Components/Button.jsx";
 import Card from "../../Components/Card.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import SideNavbar from "../../Components/SideNavbar.jsx";
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { API_URL } from "../../api";
-import PostModal from "../../Components/PostModal.jsx";
 import axios from "axios";
 import "./Home.css";
-import { useAuth } from "../../context/AuthContext";
 import Cropper from "react-easy-crop";
 import getCroppedImg from "../../utils/cropImage.js"; // use your util path
 
 function Home() {
-  const { user } = useAuth();
   const [users, setUsers] = useState([]);
   const [searched, setSearched] = useState("");
   const [posts, setPosts] = useState([]);
-  const [showModal, setShowModal] = useState(false);
 
   const isFirstRun = useRef(true);
   const fileInputRef = useRef(null);
