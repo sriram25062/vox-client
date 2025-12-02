@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../Components/Button.jsx";
 import Card from "../../Components/Card.jsx";
 import SideNavbar from "../../Components/SideNavbar.jsx";

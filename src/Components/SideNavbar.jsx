@@ -1,3 +1,4 @@
+// src/Components/SideNavbar.jsx
 import Button from "./Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrandLogo } from "../assets";
@@ -5,22 +6,23 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { API_URL } from "../api";
+import axios from "axios";
 
 function SideNavbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [showPopup, setShowPopup] = useState(false);
+
   const popupRef = useRef(null);
+  const [showPopup, setShowPopup] = useState(false); // ⭐ added back
   const [profileSrc, setProfileSrc] = useState("/avatar1.jpg");
 
-  // 👉 Update profile image when user changes
+  const [notifCount, setNotifCount] = useState(0);
+
   useEffect(() => {
     if (!user) {
       setProfileSrc("/avatar1.jpg");
       return;
     }
-
-    // Try to get user image field (backend may use different keys)
     const imagePath =
       user.profileImage ||
       user.profilePic ||
@@ -33,21 +35,56 @@ function SideNavbar() {
     } else if (imagePath.startsWith("http")) {
       setProfileSrc(imagePath);
     } else {
-      // Assume image is saved on server (e.g., "uploads/xyz.jpg")
       setProfileSrc(`${API_URL}/${imagePath.replace(/^\/+/, "")}`);
     }
   }, [user]);
 
-  // 👉 Logout logic
+  // fetch only count for badge (non-blocking)
+  const fetchNotifCount = async () => {
+    try {
+      if (!localStorage.getItem("token")) return;
+      const res = await axios.get(`${API_URL}/user/notifications`, { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
+      setNotifCount(res.data.count || 0);
+    } catch (err) {
+      setNotifCount(0);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotifCount();
+    const handler = () => fetchNotifCount();
+    window.addEventListener("followUpdated", handler);
+    window.addEventListener("postCreated", handler);
+    return () => {
+      window.removeEventListener("followUpdated", handler);
+      window.removeEventListener("postCreated", handler);
+    };
+  }, [user]);
+
+
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
-  // 👉 Popup visibility toggle
-  const togglePopup = () => setShowPopup((prev) => !prev);
+  const openPostModal = () => {
+    window.dispatchEvent(new CustomEvent("openPostModal"));
+  };
 
-  // 👉 Close popup when clicking outside
+  const openNotificationsCenter = () => {
+    window.dispatchEvent(new CustomEvent("openNotificationsModal"));
+  };
+
+  const navData = [
+    { label: "Home", path: "/home", icon: "cottage" },
+    { label: "Explore", path: "/explore", icon: "explore" },
+    { label: "Notifications", path: "#", icon: "notifications", isNotifications: true },
+    { label: "Messages", path: "/messages", icon: "send" },
+    { label: "Communities", path: "/communities", icon: "groups" },
+    { label: "Profile", path: "/profile", isProfile: true },
+  ];
+
+  // ⭐ CLICK OUTSIDE TO CLOSE POPUP
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (popupRef.current && !popupRef.current.contains(e.target)) {
@@ -57,21 +94,6 @@ function SideNavbar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  // 👉 Navigation items
-  const navData = [
-    { label: "Home", path: "/home", icon: "cottage" },
-    { label: "Explore", path: "/explore", icon: "explore" },
-    { label: "Notifications", path: "/notifications", icon: "favorite" },
-    { label: "Messages", path: "/messages", icon: "send" },
-    { label: "Communities", path: "/communities", icon: "groups" },
-    { label: "Profile", path: "/profile", isProfile: true },
-  ];
-
-  // 👉 Trigger post modal
-  const openPostModal = () => {
-    window.dispatchEvent(new CustomEvent("openPostModal"));
-  };
 
   return (
     <div
@@ -83,52 +105,81 @@ function SideNavbar() {
       }}
     >
       <div className="container flex-column">
-        {/* Brand Logo */}
         <div>
           <img src={BrandLogo} alt="Logo" style={{ width: "6rem", height: "6rem" }} />
         </div>
 
-        {/* Navigation buttons */}
         <div
           className="d-flex flex-column justify-content-center align-items-start"
           style={{ gap: "8px" }}
         >
           {navData.map((value) => (
-            <Link to={value.path} key={value.label} style={{ textDecoration: "none" }}>
-              <Button
-                label={
-                  <div className="d-flex align-items-center" style={{ gap: "8px" }}>
-                    {value.isProfile ? (
-                      <img
-                        src={profileSrc}
-                        alt="Profile"
-                        style={{
-                          width: "28px",
-                          height: "28px",
-                          borderRadius: "50%",
-                          objectFit: "cover",
-                          border: "2px solid white",
-                        }}
-                      />
-                    ) : (
-                      <span className="material-symbols-outlined">{value.icon}</span>
-                    )}
-                    {value.label}
-                  </div>
-                }
-                style={{
-                  fontSize: "20px",
-                  fontWeight: "600",
-                  color: "white",
-                  backgroundColor: "#212121",
-                }}
-                bootstrap="btn btn-dark"
-              />
-            </Link>
+            <div key={value.label} style={{ width: "100%" }}>
+              {value.isNotifications ? (
+                <div style={{ width: "100%" }}>
+                  <Button
+                    label={
+                      <div className="d-flex align-items-center" style={{ gap: "8px" }}>
+                        <span className="material-symbols-outlined">{value.icon}</span>
+                        {value.label}
+                        {notifCount > 0 && (
+                          <span style={{ marginLeft: 8, background: "red", color: "white", borderRadius: "999px", padding: "2px 6px", fontSize: 12 }}>
+                            {notifCount}
+                          </span>
+                        )}
+                      </div>
+                    }
+                    style={{
+                      fontSize: "20px",
+                      fontWeight: "600",
+                      color: "white",
+                      backgroundColor: "#212121",
+                      width: "100%",
+                      textAlign: "left"
+                    }}
+                    bootstrap="btn btn-dark"
+                    onClick={openNotificationsCenter}
+                  />
+                </div>
+              ) : (
+                <Link to={value.path} key={value.label} style={{ textDecoration: "none", width: "100%" }}>
+                  <Button
+                    label={
+                      <div className="d-flex align-items-center" style={{ gap: "8px" }}>
+                        {value.isProfile ? (
+                          <img
+                            src={profileSrc}
+                            alt="Profile"
+                            style={{
+                              width: "28px",
+                              height: "28px",
+                              borderRadius: "50%",
+                              objectFit: "cover",
+                              border: "2px solid white",
+                            }}
+                          />
+                        ) : (
+                          <span className="material-symbols-outlined">{value.icon}</span>
+                        )}
+                        {value.label}
+                      </div>
+                    }
+                    style={{
+                      fontSize: "20px",
+                      fontWeight: "600",
+                      color: "white",
+                      backgroundColor: "#212121",
+                      width: "100%",
+                      textAlign: "left"
+                    }}
+                    bootstrap="btn btn-dark"
+                  />
+                </Link>
+              )}
+            </div>
           ))}
         </div>
 
-        {/* Post Button */}
         <div onClick={openPostModal} style={{ cursor: "pointer", marginTop: "1rem" }}>
           <Button
             label="Create"
@@ -144,10 +195,10 @@ function SideNavbar() {
         </div>
       </div>
 
-      {/* User info + logout */}
+      {/* ⭐ RESTORED OLD LOGOUT POPUP */}
       <div className="mt-auto mb-4 text-center position-relative" ref={popupRef}>
         <div
-          onClick={togglePopup}
+          onClick={() => setShowPopup((prev) => !prev)}
           className="d-flex align-items-center justify-content-between"
           style={{
             width: "15rem",

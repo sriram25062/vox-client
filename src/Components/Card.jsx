@@ -1,6 +1,7 @@
+// src/Components/Card.jsx
 import React from "react";
 
-function Card({ title, img, description, post }) {
+function Card({ title, img, description, post, onUserClick }) {
   const p = post || {};
   const displayTitle = p.title || title;
   const displayImg = p.imageUrl || img;
@@ -16,10 +17,10 @@ function Card({ title, img, description, post }) {
             src={displayImg}
             alt="Post"
             style={{
-              width: "100%",       // full container width
-              height: "auto",      // auto height
-              display: "block",    // remove inline gap
-              objectFit: "contain", // show full image without cropping
+              width: "100%",
+              height: "auto",
+              display: "block",
+              objectFit: "contain",
             }}
           />
         </div>
@@ -28,7 +29,7 @@ function Card({ title, img, description, post }) {
       {/* Card Body */}
       <div className="card-body">
         {/* User Info */}
-        <div className="d-flex align-items-center mb-2" style={{ gap: 12 }}>
+        <div className="d-flex align-items-center mb-2" style={{ gap: 12, cursor: "pointer" }} onClick={onUserClick}>
           <img
             src={user.profileImage || "/avatar1.jpg"}
             alt="dp"
@@ -44,7 +45,7 @@ function Card({ title, img, description, post }) {
               {user.fullname || user.username || "Unknown"}
             </div>
             <div style={{ fontSize: 12, color: "#666" }}>
-              @{user.username}
+              @{user.username || "user"}
             </div>
           </div>
         </div>
@@ -71,4 +72,3 @@ function Card({ title, img, description, post }) {
 }
 
 export default Card;
-
