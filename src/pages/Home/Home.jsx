@@ -6,8 +6,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { API_URL } from "../../api";
 import axios from "axios";
 import "./Home.css";
-import Cropper from "react-easy-crop";
-import getCroppedImg from "../../utils/cropImage.js";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
@@ -26,12 +24,7 @@ function Home() {
   const [inlineTitle, setInlineTitle] = useState("");
   const [inlineDesc, setInlineDesc] = useState("");
   const [inlinePrivacy, setInlinePrivacy] = useState("public");
-  const [loadingPost, setLoadingPost] = useState(false);
-
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-  const [showCropper, setShowCropper] = useState(false);
 
   const token = localStorage.getItem("token");
   let loggedInUserId = null;
@@ -89,47 +82,6 @@ function Home() {
     return () => clearTimeout(handler);
   }, [searched, loggedInUserId]);
 
-  const handleInlineFile = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setInlineImageFile(null);
-    setCroppedPreview(null);
-    setInlineImagePreview(URL.createObjectURL(file));
-    setShowCropper(true);
-  };
-
-  const onCropComplete = useCallback((croppedArea, croppedAreaPx) => {
-    setCroppedAreaPixels(croppedAreaPx);
-  }, []);
-
-  const handleCropConfirm = async () => {
-    try {
-      if (!inlineImagePreview || !croppedAreaPixels) {
-        setShowCropper(false);
-        return;
-      }
-      const resp = await fetch(inlineImagePreview);
-      const originalBlob = await resp.blob();
-      const originalFile = new File([originalBlob], "inline.jpg", { type: originalBlob.type || "image/jpeg" });
-
-      const croppedBlob = await getCroppedImg(originalFile, croppedAreaPixels);
-      const croppedUrl = URL.createObjectURL(croppedBlob);
-      setCroppedPreview(croppedUrl);
-
-      const finalFile = new File([croppedBlob], "post.jpg", { type: "image/jpeg" });
-      setInlineImageFile(finalFile);
-
-      setShowCropper(false);
-    } catch (err) {
-      console.error("Crop confirm failed:", err);
-      alert("Failed to crop image.");
-    }
-  };
-
-  const handleCancelCrop = () => {
-    setShowCropper(false);
-    removeInlineImage();
-  };
 
   const removeInlineImage = () => {
     setInlineImageFile(null);
